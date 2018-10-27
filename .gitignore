@@ -22,5 +22,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /SmartHealthcareSystem/nbproject/private/
-/SmartHealthcareSystem/build/
+
 /SmartHealthcareSystem/dist/
+/SmartHealthcareSystem/build/
+# df0755076393f387e2af497023f55c2186d22666
