@@ -5,27 +5,52 @@
  */
 package smarthealthcaresystem;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  *
  * @author protagonist26
  */
 public class SHSController implements Initializable{
+    Stage window;
+    RegPage regPage;
+    
+    @FXML
+    Button signbtn;
+    
+    @FXML
+    Button logbtn;
+    
+    @FXML
+    TextField uid;
+    
+    @FXML
+    PasswordField pwd;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        regPage = new RegPage();
+    }
+    
+    @FXML
+    public void onClickListener(ActionEvent event) throws IOException{
+        if(event.getSource() == signbtn){
+            window = (Stage) signbtn.getScene().getWindow();
+            regPage.startReg(window);
+            
+        }
+        else if(event.getSource() == logbtn){
         
-    }
-    
-    public void signUP(){
-        System.out.println("SignUp button clicked.");
-    }
-    
-    public void logIn(){
-        System.out.println("LogIn button clicked.");
+        }
     }
     
 }
