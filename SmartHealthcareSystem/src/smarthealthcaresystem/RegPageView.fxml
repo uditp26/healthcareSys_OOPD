@@ -22,7 +22,7 @@
       <HBox prefHeight="53.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Region prefHeight="53.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <Label style="-fx-background-color: pink;" text="Patient Registration">
+            <Label text="Patient Registration">
                <HBox.margin>
                   <Insets left="50.0" top="10.0" />
                </HBox.margin>

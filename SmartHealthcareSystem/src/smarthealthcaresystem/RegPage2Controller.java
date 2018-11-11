@@ -1,0 +1,129 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package smarthealthcaresystem;
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+/**
+ * FXML Controller class
+ *
+ * @author protagonist26
+ */
+public class RegPage2Controller implements Initializable {
+    
+    private static final String username = "root";      // Change username if not root
+    private static final String password = "password";        // Enter your MySQL password here
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/shs_schema";
+    
+    RegPage2 regPage2;
+    RegPageController controller;
+    Stage window;
+    PHomePage pHomePage;
+    private ResultSet rs;
+    private Connection con;
+    private Statement stmt;
+    private String query;
+    
+    private static String fname_static;
+    
+    @FXML
+    Label fname;
+    
+    @FXML
+    Button submit;
+    
+    @FXML
+    TextField uname;
+    
+    @FXML
+    TextField pword;
+    
+    @FXML
+    TextField cpword;
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        controller = new RegPageController();
+        pHomePage = new PHomePage();
+        fname.setText("Welcome " + controller.getfname_static());
+    }
+    
+    public void onClickListener(ActionEvent event) throws Exception{
+        if(event.getSource() == submit){
+            window = (Stage) submit.getScene().getWindow();
+            if(checkDB() && validateInput()){
+                updateDB();
+                setFname_static(controller.getfname_static());
+                pHomePage.startLog(window);
+            }
+        }
+    }
+    
+    private boolean validateInput(){
+        if(!uname.getText().matches("[a-z][a-z_0-9]*")){
+            uname.setText("");
+            uname.setPromptText("Not a valid username!");
+            return false;
+        }
+        if(!pword.getText().equals(cpword.getText())){
+            cpword.setText("");
+            cpword.setPromptText("Password does not match!");
+            System.out.println("Password does not match!");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean checkDB() throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT * FROM shs_schema.patientlogincred_table WHERE username='" + uname.getText() + "';";
+        rs = stmt.executeQuery(query);
+        if(!rs.next()){
+            con.close();
+            return true;
+        }
+        else{
+            System.out.println("Username already exists!");
+            uname.setText("");
+            uname.setPromptText("Username already exists!");
+            con.close();
+            return false;
+        }
+    }
+    
+    private void updateDB() throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "INSERT INTO shs_schema.patientlogincred_table VALUES('" + uname.getText() + "', '" + pword.getText() + "', '" + controller.getPhone_static() + "', 'NULL');";
+        stmt.executeUpdate(query);
+        System.out.println("Table Updated");
+        con.close();
+    }
+
+    public static String getFname_static() {
+        return fname_static;
+    }
+    
+    public static void setFname_static(String aFname_static) {
+        fname_static = aFname_static;
+    }
+}
