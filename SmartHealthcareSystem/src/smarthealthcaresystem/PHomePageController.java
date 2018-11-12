@@ -6,7 +6,13 @@
 package smarthealthcaresystem;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
@@ -36,9 +42,18 @@ import javafx.scene.text.Text;
  * @author protagonist26
  */
 public class PHomePageController implements Initializable {
+    
     SmartHealthcareSystem shs;
     Stage window;
-    RegPage2Controller controller;
+    SHSController controller;
+    private ResultSet rs;
+    private Connection con;
+    private Statement stmt;
+    private String query;
+    
+    private static final String username = "root";      // Change username if not root
+    private static final String password = "password";        // Enter your MySQL password here
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/shs_schema";
     
     @FXML
     Label welcome;
@@ -76,14 +91,18 @@ public class PHomePageController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         shs = new SmartHealthcareSystem();
-        controller = new RegPage2Controller();
+        controller = new SHSController();
         ColumnConstraints cc = new ColumnConstraints();
         cc.setPercentWidth(50);
         gridpane.getColumnConstraints().add(cc);
         view_doctor.setVisible(false);
         choose_doctor.setVisible(false);
         request_appointment.setVisible(false);
-        welcome.setText("Welcome " + controller.getFname_static());
+        try {
+            welcome.setText("Welcome " + getNamefromDB(controller.getUname_static()));
+        } catch (Exception ex) {
+            Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
     
     public void onClickListener(ActionEvent event) throws Exception{
@@ -353,4 +372,17 @@ public class PHomePageController implements Initializable {
             gridpane.add(email_value,1,4);
         }
     }
+    
+    private String getNamefromDB(String uname) throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT shs_schema.patientdetails_table.fname FROM shs_schema.patientdetails_table, shs_schema.patientlogincred_table WHERE shs_schema.patientlogincred_table.username='" + uname + "' AND shs_schema.patientlogincred_table.phone=shs_schema.patientdetails_table.phone;";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        uname = rs.getString("fname");
+        con.close();
+        return uname;
+    }
+    
 }

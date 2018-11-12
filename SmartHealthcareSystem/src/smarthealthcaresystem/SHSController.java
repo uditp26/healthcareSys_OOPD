@@ -36,6 +36,8 @@ public class SHSController implements Initializable{
     private Connection con;
     private Statement stmt;
     
+    private static String uname_static;
+    
     Stage window;
     RegPage regPage;
     PHomePage php;
@@ -87,6 +89,7 @@ public class SHSController implements Initializable{
                 case 1:
                     if(lookUpDB(1)){
                         System.out.println("Patient credentials exists! Login successful.");
+                        setUname_static(uid.getText());
                         php.startLog(window);
                     }
                     else{
@@ -151,6 +154,14 @@ public class SHSController implements Initializable{
             }*/
         }
         return false;
+    }
+
+    public static String getUname_static() {
+        return uname_static;
+    }
+
+    public static void setUname_static(String aUname_static) {
+        uname_static = aUname_static;
     }
     
 }
