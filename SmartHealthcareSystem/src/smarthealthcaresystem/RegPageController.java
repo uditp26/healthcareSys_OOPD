@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,7 +32,8 @@ import javafx.stage.Stage;
 public class RegPageController implements Initializable {
     private static final String username = "root";      // Change username if not root
     private static final String password = "password";        // Enter your MySQL password here
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/shs_schema";     
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/shs_schema";
+    private static Logger logger = Logger.getLogger("smarthealthcaresystem.regpagecontroller");
     private String query;
     private boolean flag;
     private ResultSet rs;
@@ -113,25 +116,32 @@ public class RegPageController implements Initializable {
         shs = new SmartHealthcareSystem();
         regPage2 = new RegPage2();
         flag = true;
+        logger.addHandler(shs.getFHandler());
+        logger.setLevel(Level.ALL);
     }
     
     @FXML
-    public void onClickListener(ActionEvent event) throws Exception{
-        if(event.getSource() == registerbtn){
-            window = (Stage) registerbtn.getScene().getWindow();
-            if(checkDB() && validateInput()){
-                System.out.println("Initiating Registration Process...");
-                updateDB();
-                regPage2.startReg2(window);
+    public void onClickListener(ActionEvent event){
+        try{
+            if(event.getSource() == registerbtn){
+                window = (Stage) registerbtn.getScene().getWindow();
+                if(checkDB() && validateInput()){
+                    System.out.println("Initiating Registration Process...");
+                    updateDB();
+                    regPage2.startReg2(window);
+                }
+                else{
+                    System.out.println("Registration interrupted - invalid input(s).");
+                    flag = true;
+                }
             }
-            else{
-                System.out.println("Registration interrupted - invalid input(s).");
-                flag = true;
+            else if(event.getSource() == backbtn){
+                window = (Stage) backbtn.getScene().getWindow();
+                shs.start(window);
             }
         }
-        else if(event.getSource() == backbtn){
-            window = (Stage) backbtn.getScene().getWindow();
-            shs.start(window);
+        catch(Exception e){
+            logger.log(Level.SEVERE,"" , e);
         }
     }
     

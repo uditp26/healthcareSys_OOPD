@@ -26,8 +26,7 @@ import javafx.stage.Stage;
  *
  * @author protagonist26
  */
-public class RegPage2Controller implements Initializable {
-    
+public class DRegPageController implements Initializable {
     private static final String username = "root";      // Change username if not root
     private static final String password = "password";        // Enter your MySQL password here
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/shs_schema";
@@ -35,7 +34,8 @@ public class RegPage2Controller implements Initializable {
     
     RegPage2 regPage2;
     RegPageController controller;
-    PHomePageController controller2;
+    DHomePageController controller2;
+    SHSController controller3;
     Stage window;
     PHomePage pHomePage;
     private ResultSet rs;
@@ -43,16 +43,13 @@ public class RegPage2Controller implements Initializable {
     private Statement stmt;
     private String query;
     
-    private static String fname_static;
+    private static String dname_static;
     
     @FXML
-    Label fname;
+    Label dname;
     
     @FXML
     Button submit;
-    
-    @FXML
-    TextField uname;
     
     @FXML
     TextField pword;
@@ -64,9 +61,10 @@ public class RegPage2Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         SmartHealthcareSystem shs = new SmartHealthcareSystem();
         controller = new RegPageController();
-        controller2 = new PHomePageController();
-        pHomePage = new PHomePage();
-        fname.setText("Welcome " + controller.getfname_static());
+        controller2 = new DHomePageController();
+        controller3 = new SHSController();
+        //dHomePage = new DHomePage();      // <-- change here
+        dname.setText("Welcome " + controller3.getDname_static());
         logger.addHandler(shs.getFHandler());
         logger.setLevel(Level.ALL);
     }
@@ -75,11 +73,11 @@ public class RegPage2Controller implements Initializable {
         try{
             if(event.getSource() == submit){
                 window = (Stage) submit.getScene().getWindow();
-                if(checkDB() && validateInput()){
+                if(validateInput()){
                     updateDB();
-                    setFname_static(controller.getfname_static());
-                    controller2.setFname_static(fname_static);
-                    pHomePage.startLog(window);
+                    setDname_static(controller3.getDname_static());
+                    //controller2.setDname_static(dname_static);        // <-- change here
+                    //dHomePage.startLog(window);       // <-- change here
                 }
             }
         }
@@ -90,11 +88,6 @@ public class RegPage2Controller implements Initializable {
     }
     
     private boolean validateInput(){
-        if(!uname.getText().matches("[a-z][a-z_0-9]*")){
-            uname.setText("");
-            uname.setPromptText("Not a valid username!");
-            return false;
-        }
         if(!pword.getText().equals(cpword.getText())){
             cpword.setText("");
             cpword.setPromptText("Password does not match!");
@@ -104,40 +97,22 @@ public class RegPage2Controller implements Initializable {
         return true;
     }
     
-    private boolean checkDB() throws Exception{
-        Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection(URL, username, password);
-        stmt = con.createStatement();
-        query = "SELECT * FROM shs_schema.patientlogincred_table WHERE username='" + uname.getText() + "';";
-        rs = stmt.executeQuery(query);
-        if(!rs.next()){
-            con.close();
-            return true;
-        }
-        else{
-            System.out.println("Username already exists!");
-            uname.setText("");
-            uname.setPromptText("Username already exists!");
-            con.close();
-            return false;
-        }
-    }
-    
     private void updateDB() throws Exception{
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(URL, username, password);
         stmt = con.createStatement();
-        query = "INSERT INTO shs_schema.patientlogincred_table VALUES('" + uname.getText() + "', '" + pword.getText() + "', '" + controller.getPhone_static() + "', 'NULL');";
+        query = "UPDATE shs_schema.doctordetails_table SET password = '" + pword.getText() + "' WHERE did = '" + controller3.getDid_static() + "';";
         stmt.executeUpdate(query);
         System.out.println("Table Updated");
         con.close();
     }
 
-    public static String getFname_static() {
-        return fname_static;
+    public static String getDname_static() {
+        return dname_static;
     }
     
-    public static void setFname_static(String aFname_static) {
-        fname_static = aFname_static;
-    }
+    public static void setDname_static(String aFname_static) {
+        dname_static = aFname_static;
+    }    
+    
 }

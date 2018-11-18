@@ -5,6 +5,7 @@
  */
 package smarthealthcaresystem;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,6 +21,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import java.util.logging.*;
 
 /**
  *
@@ -31,17 +33,22 @@ public class SHSController implements Initializable{
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/shs_schema";
     private static final String admin_name = "shsadmin";
     private static final String login_password = "Secure1*";
+    private static Logger logger = Logger.getLogger("smarthealthcaresystem.shscontroller");
     private String query;
     private ResultSet rs;
     private Connection con;
     private Statement stmt;
+    private Boolean flag;
     
     private static String uname_static;
+    private static String dname_static;
+    private static String did_static;
     
     Stage window;
     RegPage regPage;
     PHomePage php;
     AHomePage ahp;
+    DRegPage dregPage;
     //DHomePage dhp;
     
     
@@ -71,53 +78,73 @@ public class SHSController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        SmartHealthcareSystem shs = new SmartHealthcareSystem();
+        flag = false;
         regPage = new RegPage();
         php = new PHomePage();
         ahp = new AHomePage();
+        dregPage = new DRegPage();
         //dhp = new DHomePage();
+        try {
+            logger.addHandler(shs.getFHandler());
+            logger.setLevel(Level.ALL);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE,"" , e);
+        }
     }
     
     @FXML
-    public void onClickListener(ActionEvent event) throws Exception{
-        if(event.getSource() == signbtn){
-            window = (Stage) signbtn.getScene().getWindow();
-            regPage.startReg(window);   
-        }
-        else if(event.getSource() == logbtn){
-            window = (Stage) logbtn.getScene().getWindow();
-            switch(determineUser()){
-                case 1:
-                    if(lookUpDB(1)){
-                        System.out.println("Patient credentials exists! Login successful.");
-                        setUname_static(uid.getText());
-                        php.startLog(window);
-                    }
-                    else{
-                        System.out.println("Patient login failed!");
-                    }
-                    break;
-                case 2:
-                    if(lookUpDB(2)){
-                        System.out.println("Doctor credentials exists! Login successful.");
+    public void onClickListener(ActionEvent event){
+        try{
+            if(event.getSource() == signbtn){
+                window = (Stage) signbtn.getScene().getWindow();
+                regPage.startReg(window);   
+            }
+            else if(event.getSource() == logbtn){
+                window = (Stage) logbtn.getScene().getWindow();
+                switch(determineUser()){
+                    case 1:
+                        if(lookUpDB(1)){
+                            System.out.println("Patient credentials exists! Login successful.");
+                            setUname_static(uid.getText());
+                            php.startLog(window);
+                        }
+                        else{
+                            System.out.println("Patient login failed!");
+                        }
+                        break;
+                    case 2:
+                        if(lookUpDB(2)){
+                            if(flag){
+                                setDid_static(uid.getText());
+                                dregPage.startReg(window);
+                            }
+                            else{
+                                System.out.println("Doctor credentials exists! Login successful.");
+                            }
+                        }
+                        else{
+                            System.out.println("Doctor login failed!");
+                        }
                         //
-                    }
-                    else{
-                        System.out.println("Doctor login failed!");
-                    }
-                    //
-                    break;
-                case 3:
-                    if(uid.getText().equals(admin_name) && pwd.getText().equals(login_password)){
-                        System.out.println("Admin login successful!");
-                        ahp.startAHP(window);
-                    }
-                    else{
-                        System.out.println("Admin login failed!");
-                    }
-                    break;
-                default:
+                        break;
+                    case 3:
+                        if(uid.getText().equals(admin_name) && pwd.getText().equals(login_password)){
+                            System.out.println("Admin login successful!");
+                            ahp.startAHP(window);
+                        }
+                        else{
+                            System.out.println("Admin login failed!");
+                        }
+                        break;
+                    default:
+                }
             }
         }
+        catch(Exception e){
+            logger.log(Level.SEVERE, "", e);
+        }
+        
     }
     
     private int determineUser(){
@@ -147,11 +174,15 @@ public class SHSController implements Initializable{
             }
         }
         else {
-            /*query = "SELECT * FROM shs_schema.doctorlogincred_table WHERE username='" + uid.getText() + "';";
+            query = "SELECT fname, password FROM shs_schema.doctordetails_table WHERE did='" + uid.getText() + "';";
             rs = stmt.executeQuery(query);
             if(rs.next()){
-                return true;
-            }*/
+                setDname_static(rs.getString("fname"));
+                if(rs.getString("password") == null){
+                    flag = true;
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -162,6 +193,34 @@ public class SHSController implements Initializable{
 
     public static void setUname_static(String aUname_static) {
         uname_static = aUname_static;
+    }
+
+    /**
+     * @return the did_static
+     */
+    public static String getDid_static() {
+        return did_static;
+    }
+
+    /**
+     * @param aDid_static the did_static to set
+     */
+    public static void setDid_static(String aDid_static) {
+        did_static = aDid_static;
+    }
+
+    /**
+     * @return the dname_static
+     */
+    public static String getDname_static() {
+        return dname_static;
+    }
+
+    /**
+     * @param aDname_static the dname_static to set
+     */
+    public static void setDname_static(String aDname_static) {
+        dname_static = aDname_static;
     }
     
 }
