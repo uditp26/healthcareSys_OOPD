@@ -51,7 +51,7 @@ public class RegPage2ControllerTest {
         RegPage2Controller instance = new RegPage2Controller();
         instance.initialize(url, rb);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -64,7 +64,7 @@ public class RegPage2ControllerTest {
         RegPage2Controller instance = new RegPage2Controller();
         instance.onClickListener(event);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -77,7 +77,7 @@ public class RegPage2ControllerTest {
         String result = RegPage2Controller.getFname_static();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -89,7 +89,7 @@ public class RegPage2ControllerTest {
         String aFname_static = "";
         RegPage2Controller.setFname_static(aFname_static);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
     
 }

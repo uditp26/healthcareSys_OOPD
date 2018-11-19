@@ -51,7 +51,7 @@ public class SHSControllerTest {
         SHSController instance = new SHSController();
         instance.initialize(location, resources);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -64,7 +64,7 @@ public class SHSControllerTest {
         SHSController instance = new SHSController();
         instance.onClickListener(event);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -77,7 +77,7 @@ public class SHSControllerTest {
         String result = SHSController.getUname_static();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -89,7 +89,57 @@ public class SHSControllerTest {
         String aUname_static = "";
         SHSController.setUname_static(aUname_static);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getDid_static method, of class SHSController.
+     */
+    @Test
+    public void testGetDid_static() {
+        System.out.println("getDid_static");
+        String expResult = "";
+        String result = SHSController.getDid_static();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setDid_static method, of class SHSController.
+     */
+    @Test
+    public void testSetDid_static() {
+        System.out.println("setDid_static");
+        String aDid_static = "";
+        SHSController.setDid_static(aDid_static);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getDname_static method, of class SHSController.
+     */
+    @Test
+    public void testGetDname_static() {
+        System.out.println("getDname_static");
+        String expResult = "";
+        String result = SHSController.getDname_static();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setDname_static method, of class SHSController.
+     */
+    @Test
+    public void testSetDname_static() {
+        System.out.println("setDname_static");
+        String aDname_static = "";
+        SHSController.setDname_static(aDname_static);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
     }
     
 }

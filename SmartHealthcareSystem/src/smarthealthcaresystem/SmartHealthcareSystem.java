@@ -28,6 +28,8 @@ public class SmartHealthcareSystem extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         window = primaryStage;
+        window.setWidth(1024);
+        window.setHeight(768);
         Parent root = FXMLLoader.load(getClass().getResource("SHSView.fxml"));
         homepageScene = new Scene(root, window.getWidth(), window.getHeight());
         window.setTitle("Smart Healthcare System");

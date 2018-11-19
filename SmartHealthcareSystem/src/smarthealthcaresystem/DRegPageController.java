@@ -103,7 +103,7 @@ public class DRegPageController implements Initializable {
         stmt = con.createStatement();
         query = "UPDATE shs_schema.doctordetails_table SET password = '" + pword.getText() + "' WHERE did = '" + controller3.getDid_static() + "';";
         stmt.executeUpdate(query);
-        System.out.println("Table Updated");
+        System.out.println("doctordetails_table Updated");
         con.close();
     }
 

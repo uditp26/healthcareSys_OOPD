@@ -7,7 +7,6 @@ package smarthealthcaresystem;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author protagonist26
  */
-public class AHomePageControllerTest {
+public class DHomePageControllerTest {
     
-    public AHomePageControllerTest() {
+    public DHomePageControllerTest() {
     }
     
     @BeforeClass
@@ -41,28 +40,15 @@ public class AHomePageControllerTest {
     }
 
     /**
-     * Test of initialize method, of class AHomePageController.
+     * Test of initialize method, of class DHomePageController.
      */
     @Test
     public void testInitialize() {
         System.out.println("initialize");
         URL url = null;
         ResourceBundle rb = null;
-        AHomePageController instance = new AHomePageController();
+        DHomePageController instance = new DHomePageController();
         instance.initialize(url, rb);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of onClickListener method, of class AHomePageController.
-     */
-    @Test
-    public void testOnClickListener() {
-        System.out.println("onClickListener");
-        ActionEvent event = null;
-        AHomePageController instance = new AHomePageController();
-        instance.onClickListener(event);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }

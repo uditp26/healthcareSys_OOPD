@@ -9,7 +9,9 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -55,18 +57,19 @@ public class AHomePageController implements Initializable {
     
     SmartHealthcareSystem shs;
     Stage window;
-    //HBox hbox;
-    //Region region1, region2;
-    //GridPane gridpane;
     Label sno, pname, gender, disease, dname, h1, h2, h3, h4, h5, doc[];
     TextField tfdoc[];
     TextArea addr;
-    ToggleGroup surgeon, category;
-    RadioButton yes, no, jresident, sresident, specialist, sspecialist;
-    HBox hBox1;
+    ToggleGroup surgeon, category, hod, doctors;
+    RadioButton yes, no, jresident, sresident, specialist, sspecialist, yeah, nah, chr;
+    HBox hBox1, hBox2;
     VBox vBox1;
     Button saveButton, backButton, reassignButton;
     Boolean flag;
+    ArrayList<RadioButton> ch;
+    ArrayList<String> doctorIDs;
+    ArrayList<String> dIDs;
+    ArrayList<String> patientIDs;
     
     @FXML
     Label name;
@@ -101,10 +104,6 @@ public class AHomePageController implements Initializable {
         // TODO
         shs = new SmartHealthcareSystem();
         flag = true;
-        /*hbox = new HBox();
-        region1 = new Region();
-        gridpane = new GridPane();
-        region2 = new Region();*/
         logger.addHandler(shs.getFHandler());
         logger.setLevel(Level.ALL);
     }    
@@ -113,26 +112,35 @@ public class AHomePageController implements Initializable {
         try{
             if(event.getSource() == add_doc){
                 gridPane.getChildren().clear();
-                doc = new Label[10];
-                for(int i=0;i<10;i++){
+                doc = new Label[12];
+                for(int i=0;i<12;i++){
                     doc[i] = new Label();
                 }
-                tfdoc = new TextField[7];
-                for(int i=0;i<7;i++){
+                tfdoc = new TextField[8];
+                for(int i=0;i<8;i++){
                     tfdoc[i] = new TextField();
                 }
                 tfdoc[5].setPromptText("HH:MM");
                 tfdoc[6].setPromptText("HH:MM");
                 addr = new TextArea();
                 surgeon = new ToggleGroup();
+                hod = new ToggleGroup();
                 yes = new RadioButton();
                 no = new RadioButton();
+                yeah = new RadioButton();
+                nah = new RadioButton();
                 yes.setText("Yes");
+                yeah.setText("Yes");
                 no.setText("No");
+                nah.setText("No");
                 yes.setToggleGroup(surgeon);
                 no.setToggleGroup(surgeon);
+                yeah.setToggleGroup(hod);
+                nah.setToggleGroup(hod);
                 hBox1 = new HBox();
+                hBox2 = new HBox();
                 hBox1.getChildren().addAll(yes, no);
+                hBox2.getChildren().addAll(yeah, nah);
                 category = new ToggleGroup();
                 jresident = new RadioButton();
                 jresident.setText("Junior Resident");
@@ -159,9 +167,12 @@ public class AHomePageController implements Initializable {
                 doc[7].setText("Category");
                 doc[8].setText("Duty Start");
                 doc[9].setText("Duty End");
-                for(int i=0;i<10;i++){
+                doc[10].setText("HOD?");
+                doc[11].setText("Department");
+                for(int i=0;i<12;i++){
                     gridPane.add(doc[i], 1, i);
                 }
+                gridPane.getColumnConstraints().get(4).setMinWidth(200);
                 gridPane.add(tfdoc[0], 4, 0);
                 gridPane.add(tfdoc[1], 4, 1);
                 gridPane.add(tfdoc[2], 4, 2);
@@ -172,19 +183,21 @@ public class AHomePageController implements Initializable {
                 gridPane.add(vBox1, 4, 7);
                 gridPane.add(tfdoc[5], 4, 8);
                 gridPane.add(tfdoc[6], 4, 9);
+                gridPane.add(hBox2, 4, 10);
+                gridPane.add(tfdoc[7], 4, 11);
                 gridPane.add(saveButton, 3, 12);
                 saveButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         try {
-                            //if(validateInput()){
-                            updateDB();
-                            resetFields();
-                            //}
-                            //else{
-                            //System.out.println("DB updation interrupted - invalid input(s).");
-                            //flag = true;
-                            //}
+                            if(validateInput()){
+                                updateDB();
+                                resetFields();
+                            }
+                            else{
+                                System.out.println("DB updation interrupted - invalid input(s).");
+                                flag = true;
+                            }
                         } catch (Exception ex) {
                             Logger.getLogger(AHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -209,6 +222,11 @@ public class AHomePageController implements Initializable {
                 h5 = new Label("Duty End");
                 h5.setFont(new Font("Arial", 18));
                 h5.setAlignment(Pos.CENTER);
+                gridPane.getColumnConstraints().get(0).setMinWidth(100);
+                gridPane.getColumnConstraints().get(1).setMinWidth(180);
+                gridPane.getColumnConstraints().get(2).setMinWidth(180);
+                gridPane.getColumnConstraints().get(3).setMinWidth(180);
+                gridPane.getColumnConstraints().get(4).setMinWidth(180);
                 gridPane.add(h1, 0, rcount);
                 gridPane.add(h2, 1, rcount);
                 gridPane.add(h3, 2, rcount);
@@ -234,9 +252,14 @@ public class AHomePageController implements Initializable {
                 h4 = new Label("Disease");
                 h4.setFont(new Font("Arial", 18));
                 h4.setAlignment(Pos.CENTER);
-                h5 = new Label("Doctor");
+                h5 = new Label("Location");
                 h5.setFont(new Font("Arial", 18));
                 h5.setAlignment(Pos.CENTER);
+                gridPane.getColumnConstraints().get(0).setMinWidth(100);
+                gridPane.getColumnConstraints().get(1).setMinWidth(180);
+                gridPane.getColumnConstraints().get(2).setMinWidth(180);
+                gridPane.getColumnConstraints().get(3).setMinWidth(180);
+                gridPane.getColumnConstraints().get(4).setMinWidth(180);
                 gridPane.add(h1, 0, rcount);
                 gridPane.add(h2, 1, rcount);
                 gridPane.add(h3, 2, rcount);
@@ -265,15 +288,20 @@ public class AHomePageController implements Initializable {
                 h5 = new Label("Doctor");
                 h5.setFont(new Font("Arial", 18));
                 h5.setAlignment(Pos.CENTER);
+                gridPane.getColumnConstraints().get(0).setMinWidth(100);
+                gridPane.getColumnConstraints().get(1).setMinWidth(180);
+                gridPane.getColumnConstraints().get(2).setMinWidth(180);
+                gridPane.getColumnConstraints().get(3).setMinWidth(180);
+                gridPane.getColumnConstraints().get(4).setMinWidth(180);
                 gridPane.add(h1, 0, rcount);
                 gridPane.add(h2, 1, rcount);
                 gridPane.add(h3, 2, rcount);
                 gridPane.add(h4, 3, rcount);
                 gridPane.add(h5, 4, rcount);
                 rcount += 1;
-                fetchPatients();
+                fetchRPatients();
                 updatePRPage();
-                con.close();
+                //con.close();
             }
             else if(event.getSource() == logout){
                 window = (Stage) logout.getScene().getWindow();
@@ -289,7 +317,15 @@ public class AHomePageController implements Initializable {
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(URL, username, password);
         stmt = con.createStatement();
-        query = "SELECT patientdetails_table.fname, patientdetails_table.lname, patientdetails_table.gender FROM patientdetails_table, patientlogincred_table WHERE patientlogincred_table.phone=shs_schema.patientdetails_table.phone;";
+        query = "SELECT patientdetails_table.fname, patientdetails_table.lname, patientdetails_table.gender, patientlogincred_table.disease, patientdetails_table.location FROM patientdetails_table, patientlogincred_table WHERE patientlogincred_table.phone=patientdetails_table.phone;";
+        rs = stmt.executeQuery(query);
+    }
+    
+    private void fetchRPatients() throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT patientlogincred_table.pid, patientlogincred_table.did, patientdetails_table.fname, patientdetails_table.lname, patientdetails_table.gender, patientlogincred_table.disease, doctordetails_table.fname, doctordetails_table.lname  FROM patientdetails_table, patientlogincred_table, doctordetails_table  WHERE patientlogincred_table.phone=patientdetails_table.phone AND patientlogincred_table.did=doctordetails_table.did;";
         rs = stmt.executeQuery(query);
     }
     
@@ -303,34 +339,48 @@ public class AHomePageController implements Initializable {
     
     private void updatePRPage() throws Exception{
         ArrayList<Label> pnames = new ArrayList();
+        ArrayList<Label> dnames = new ArrayList();
+        patientIDs = new ArrayList<>();
+        dIDs = new ArrayList<>();
         while(rs.next()){
+            patientIDs.add(rs.getString("patientlogincred_table.pid"));
+            dIDs.add(rs.getString("patientlogincred_table.did"));
             sno = new Label(""+rcount);
             sno.setFont(new Font("Arial", 16));
             sno.setAlignment(Pos.CENTER);
-            pnames.add(new Label(rs.getString("fname") + " " + rs.getString("lname")));
+            pnames.add(new Label(rs.getString("patientdetails_table.fname") + " " + rs.getString("patientdetails_table.lname")));
             pnames.get(pnames.size()-1).setFont(new Font("Arial", 16));
             pnames.get(pnames.size()-1).setAlignment(Pos.CENTER);
             gender = new Label(rs.getString("gender"));
             gender.setFont(new Font("Arial", 16));
             gender.setAlignment(Pos.CENTER);
-            //disease = new Label(rs.getString("");
-            //disease.setFont(new Font("Arial", 16));
-            //disease.setAlignment(Pos.CENTER);
-            //dname = new Label(rs.getString("");
-            //disease.setFont(new Font("Arial", 16));
-            //disease.setAlignment(Pos.CENTER);
+            disease = new Label(rs.getString("disease"));
+            disease.setFont(new Font("Arial", 16));
+            disease.setAlignment(Pos.CENTER);
+            dnames.add(new Label(rs.getString("doctordetails_table.fname") + " " + rs.getString("doctordetails_table.lname")));
+            dnames.get(dnames.size()-1).setFont(new Font("Arial", 16));
+            dnames.get(dnames.size()-1).setAlignment(Pos.CENTER);
+            gridPane.getColumnConstraints().get(0).setMinWidth(100);
+            gridPane.getColumnConstraints().get(1).setMinWidth(180);
+            gridPane.getColumnConstraints().get(2).setMinWidth(180);
+            gridPane.getColumnConstraints().get(3).setMinWidth(180);
+            gridPane.getColumnConstraints().get(4).setMinWidth(180);
             gridPane.add(sno, 0, rcount);
             gridPane.add(pnames.get(pnames.size()-1), 1, rcount);
             gridPane.add(gender, 2, rcount);
-            //gridPane.add(disease, 3, rcount);
-            //gridPane.add(doctor, 4, rcount);
+            gridPane.add(disease, 3, rcount);
+            gridPane.add(dnames.get(pnames.size()-1), 4, rcount);
             rcount += 1;
             pnames.get(pnames.size()-1).setOnMouseClicked(new EventHandler<MouseEvent>(){
                 @Override
                 public void handle(MouseEvent event) {
                     for(int i=0;i<pnames.size();i++){
                         if(event.getSource() == pnames.get(i)){
-                            buildReassignScene(pnames.get(i));
+                            try {
+                                buildReassignScene(pnames.get(i), dnames.get(i), patientIDs.get(i), dIDs.get(i));
+                            } catch (SQLException ex) {
+                                Logger.getLogger(AHomePageController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 }
@@ -343,39 +393,55 @@ public class AHomePageController implements Initializable {
             sno = new Label(""+rcount);
             sno.setFont(new Font("Arial", 16));
             sno.setAlignment(Pos.CENTER);
-            pname = new Label(rs.getString("fname") + " " + rs.getString("lname"));
+            pname = new Label(rs.getString("patientdetails_table.fname") + " " + rs.getString("patientdetails_table.lname"));
             pname.setFont(new Font("Arial", 16));
             pname.setAlignment(Pos.CENTER);
             gender = new Label(rs.getString("gender"));
             gender.setFont(new Font("Arial", 16));
             gender.setAlignment(Pos.CENTER);
-            //disease = new Label(rs.getString("");
-            //disease.setFont(new Font("Arial", 16));
-            //disease.setAlignment(Pos.CENTER);
-            //dname = new Label(rs.getString("");
-            //disease.setFont(new Font("Arial", 16));
-            //disease.setAlignment(Pos.CENTER);
+            disease = new Label(rs.getString("disease"));
+            disease.setFont(new Font("Arial", 16));
+            disease.setAlignment(Pos.CENTER);
+            dname = new Label(rs.getString("location"));
+            dname.setFont(new Font("Arial", 16));
+            dname.setAlignment(Pos.CENTER);
+            gridPane.getColumnConstraints().get(0).setMinWidth(100);
+            gridPane.getColumnConstraints().get(1).setMinWidth(180);
+            gridPane.getColumnConstraints().get(2).setMinWidth(180);
+            gridPane.getColumnConstraints().get(3).setMinWidth(180);
+            gridPane.getColumnConstraints().get(4).setMinWidth(180);
             gridPane.add(sno, 0, rcount);
             gridPane.add(pname, 1, rcount);
             gridPane.add(gender, 2, rcount);
-            //gridPane.add(disease, 3, rcount);
-            //gridPane.add(doctor, 4, rcount);
+            gridPane.add(disease, 3, rcount);
+            gridPane.add(dname, 4, rcount);
             rcount += 1;
         }    
     }
     
-    private void buildReassignScene(Label pclicked){
+    private void buildReassignScene(Label pclicked, Label dclicked, String pid, String did) throws SQLException{
         gridPane.getChildren().clear();
         backButton = new Button("Back");
         reassignButton = new Button("Reassign");
         borderPane.getLeft().setDisable(true);
+        gridPane.getColumnConstraints().get(0).setMinWidth(100);
+        gridPane.getColumnConstraints().get(1).setMinWidth(180);
+        gridPane.getColumnConstraints().get(2).setMinWidth(180);
+        gridPane.getColumnConstraints().get(3).setMinWidth(180);
+        gridPane.getColumnConstraints().get(4).setMinWidth(180);
         gridPane.add(new Label("Patient:"), 1, 0);
         gridPane.add(new Label("Doctor:"), 1, 1);
+        gridPane.add(new Label("List of doctors:"), 1, 2);
+        gridPane.add(new Label(""), 1, 3);
+        gridPane.add(new Label("Doctor"), 1, 4);
+        gridPane.add(new Label("Dept."), 2, 4);
+        gridPane.add(new Label("Duty Start"), 3, 4);
+        gridPane.add(new Label("Duty End"), 4, 4);
         gridPane.add(pclicked, 3, 0);
-        //gridPane.add(doctor, 3, 1);
-        listDoctors();
-        gridPane.add(backButton, 2, 2);
-        gridPane.add(reassignButton, 3, 2);
+        gridPane.add(dclicked, 3, 1);
+        int row = listDoctors(5, dclicked, did);
+        gridPane.add(backButton, 2, row);
+        gridPane.add(reassignButton, 3, row);
         backButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
@@ -386,13 +452,64 @@ public class AHomePageController implements Initializable {
         reassignButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-                //updateDB
+                for(int i=0;i<ch.size();i++){
+                    if(doctors.getSelectedToggle() == ch.get(i)){
+                        try {
+                            updateRDB(doctorIDs.get(i), pid);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(AHomePageController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        System.out.println("doctordetails_table updated!");
+                        break;    
+                    }
+                }
+                gridPane.getChildren().clear();
+                borderPane.getLeft().setDisable(false); 
             }
         });
     }
     
-    private void listDoctors(){
+   private void updateRDB(String did, String pid) throws SQLException{
+       query = "UPDATE patientlogincred_table SET did = '" + did + "' WHERE pid = '" + pid + "';";
+       stmt.executeUpdate(query);
+       System.out.println("patientlogincred_table Updated");
+       con.close();
+   }
     
+    private int listDoctors(int row, Label dclicked, String did) throws SQLException{
+        /*String temp = dclicked.getText();
+        String arr[];
+        arr = temp.split(" ");
+        query = "SELECT dutystart, dutyend from doctordetails_table WHERE fname = '" + arr[0] + "' AND lname = '" + arr[1] + "';";      // assuming doctor names to be distinct
+        Time t1, t2;
+        rs = stmt.executeQuery(query);
+        if(rs.next()){
+            t1 = rs.getTime("dutystart");
+            t2 = rs.getTime("dutyend");
+        }*/
+        doctors = new ToggleGroup();
+        ch = new ArrayList<>();
+        doctorIDs = new ArrayList<>();
+        query = "SELECT did, fname, lname, department, dutystart, dutyend from doctordetails_table WHERE did != '" + did + "' ORDER BY dutystart, dutyend;";
+        rs = stmt.executeQuery(query);
+        while(rs.next()){
+            chr = new RadioButton();
+            chr.setToggleGroup(doctors);
+            ch.add(chr);
+            doctorIDs.add(rs.getString("did"));
+            gridPane.getColumnConstraints().get(0).setMinWidth(100);
+            gridPane.getColumnConstraints().get(1).setMinWidth(180);
+            gridPane.getColumnConstraints().get(2).setMinWidth(180);
+            gridPane.getColumnConstraints().get(3).setMinWidth(180);
+            gridPane.getColumnConstraints().get(4).setMinWidth(180);
+            gridPane.add(chr, 0, row);
+            gridPane.add(new Label(rs.getString("fname") + " " + rs.getString("lname")), 1, row);
+            gridPane.add(new Label(rs.getString("department")), 2, row);
+            gridPane.add(new Label(rs.getString("dutystart")), 3, row);
+            gridPane.add(new Label(rs.getString("dutyend")), 4, row);
+            row += 1;
+        }
+        return row;
     }
     
     private void updateDPage() throws Exception{
@@ -412,6 +529,11 @@ public class AHomePageController implements Initializable {
             h5 = new Label(rs.getString("dutyend"));
             h5.setFont(new Font("Arial", 16));
             h5.setAlignment(Pos.CENTER);
+            gridPane.getColumnConstraints().get(0).setMinWidth(100);
+            gridPane.getColumnConstraints().get(1).setMinWidth(180);
+            gridPane.getColumnConstraints().get(2).setMinWidth(180);
+            gridPane.getColumnConstraints().get(3).setMinWidth(180);
+            gridPane.getColumnConstraints().get(4).setMinWidth(180);
             gridPane.add(h1, 0, rcount);
             gridPane.add(h2, 1, rcount);
             gridPane.add(h3, 2, rcount);
@@ -425,7 +547,7 @@ public class AHomePageController implements Initializable {
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(URL, username, password);
         stmt = con.createStatement();
-        query = "INSERT INTO shs_schema.doctordetails_table VALUES('" + tfdoc[0].getText() + "', '" + tfdoc[1].getText() + "', '" + tfdoc[2].getText() + "', '" + addr.getText() + "', '" + tfdoc[3].getText() + "', '" + tfdoc[4].getText() + "', '" + getSToggleValue() + "', '" + getCToggleValue() + "', '" + tfdoc[5].getText() + "', '" + tfdoc[6].getText() + "');";
+        query = "INSERT INTO shs_schema.doctordetails_table VALUES('" + tfdoc[0].getText() + "', '" + tfdoc[1].getText() + "', '" + tfdoc[2].getText() + "', '" + addr.getText() + "', '" + tfdoc[3].getText() + "', '" + tfdoc[4].getText() + "', '" + getSToggleValue() + "', '" + getCToggleValue() + "', '" + tfdoc[5].getText() + "', '" + tfdoc[6].getText() + "', NULL, '" + getHToggleValue() + "', '" + tfdoc[7].getText() + "');";
         stmt.executeUpdate(query);
         System.out.println("doctordetails_table Updated");
         con.close();
@@ -433,6 +555,15 @@ public class AHomePageController implements Initializable {
     
     private String getSToggleValue(){
         if(surgeon.getSelectedToggle() == yes){
+            return "Yes";
+        }
+        else{
+            return "No";
+        }
+    }
+    
+    private String getHToggleValue(){
+        if(hod.getSelectedToggle() == yeah){
             return "Yes";
         }
         else{
@@ -457,30 +588,36 @@ public class AHomePageController implements Initializable {
     
     private void resetFields(){
         tfdoc[0].setText("");
+        tfdoc[0].setPromptText("");
         tfdoc[1].setText("");
+        tfdoc[1].setPromptText("");
         tfdoc[2].setText("");
+        tfdoc[2].setPromptText("");
         tfdoc[3].setText("");
+        tfdoc[3].setPromptText("");
         tfdoc[4].setText("");
+        tfdoc[4].setPromptText("");
         tfdoc[5].setText("");
+        tfdoc[5].setPromptText("");
         tfdoc[6].setText("");
+        tfdoc[6].setPromptText("");
+        tfdoc[7].setText("");
+        tfdoc[7].setPromptText("");
         addr.setText("");
         surgeon.getSelectedToggle().setSelected(false);
         category.getSelectedToggle().setSelected(false);
+        hod.getSelectedToggle().setSelected(false);
+        
     }
     
-    /*private boolean validateInput(){
-        doc[0].setText("ID");
-            doc[1].setText("First Name");
-            doc[2].setText("Last Name");
-            doc[3].setText("Address");
-            doc[4].setText("Phone");
-            doc[5].setText("Email");
-            doc[6].setText("Surgeon?");
-            doc[7].setText("Category");
-            doc[8].setText("Duty Start");
-            doc[9].setText("Duty End");
+    private boolean validateInput(){
         
-        if(tfdoc)
+        if(tfdoc[0].getText().matches("")){
+            tfdoc[0].setText("");
+            tfdoc[0].setPromptText("Id field empty!");
+            flag = false;
+        }
+        
         if(!tfdoc[1].getText().matches("[a-zA-Z]+")){
             tfdoc[1].setText("");
             tfdoc[1].setPromptText("Not a valid name!");
@@ -493,53 +630,50 @@ public class AHomePageController implements Initializable {
             flag = false;
         }
         
-        if(gender.getSelectedToggle() == null){
-            // show alert dialog box
-            flag = false;
-        }
-        if(dob.getValue() == null){
-            dob.setPromptText("No date selected!");
-            flag = false;
-        }
         if(!(tfdoc[3].getText().length() == 10 && tfdoc[3].getText().matches("[0-9]+"))){
             tfdoc[3].setText("");
             tfdoc[3].setPromptText("Not a valid mobile number!");
             flag = false;
         }
         
-        setPhone_static(phone.getText());
-        
-        if(!email.getText().matches("[a-z][a-z_0-9_.]*[@][a-z_.]+")){
-            email.setText("");
-            email.setPromptText("Not a valid email!");
-            flag = false;
-        }
-        if(addr.getText().equals("")){
-            addr.setPromptText("Can't leave address field empty!");
+        if(!tfdoc[4].getText().matches("[a-z][a-z_0-9_.]*[@][a-z_.]+")){
+            tfdoc[4].setText("");
+            tfdoc[4].setPromptText("Not a valid email!");
             flag = false;
         }
         
-        if(location.getSelectedToggle() == null){
-            // show alert dialog box
+        if(!tfdoc[5].getText().matches("[0-9][0-9]:[0-9][0-9]")){
+            tfdoc[5].setText("");
+            tfdoc[5].setPromptText("Not a valid time!");
             flag = false;
         }
         
-        if(condition.getSelectedToggle() == null){
-            // show alert dialog box
+        if(!tfdoc[6].getText().matches("[0-9][0-9]:[0-9][0-9]")){
+            tfdoc[6].setText("");
+            tfdoc[6].setPromptText("Not a valid time!");
             flag = false;
         }
-        if(!accomp.getText().matches("[a-zA-Z]*")){
-            accomp.setText("");
-            accomp.setPromptText("Not a valid name!");
+        
+        if(tfdoc[7].getText().matches("")){
+            tfdoc[7].setText("");
+            tfdoc[7].setPromptText("Department Field empty!");
             flag = false;
         }
-        if(!(ephone.getText().length() == 0 || (ephone.getText().matches("[0-9]+") && ephone.getText().length() == 10))){
-            ephone.setText("");
-            ephone.setPromptText("Not a valid mobile number!");
+        
+        if(surgeon.getSelectedToggle() == null){
             flag = false;
         }
+        
+        if(category.getSelectedToggle() == null){
+            flag = false;
+        }
+        
+        if(hod.getSelectedToggle() == null){
+            flag = false;
+        }
+        
         return flag;
-    }*/
+    }
 }
 
 

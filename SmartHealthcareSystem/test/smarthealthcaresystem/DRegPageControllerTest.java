@@ -19,9 +19,9 @@ import static org.junit.Assert.*;
  *
  * @author protagonist26
  */
-public class AHomePageControllerTest {
+public class DRegPageControllerTest {
     
-    public AHomePageControllerTest() {
+    public DRegPageControllerTest() {
     }
     
     @BeforeClass
@@ -41,28 +41,53 @@ public class AHomePageControllerTest {
     }
 
     /**
-     * Test of initialize method, of class AHomePageController.
+     * Test of initialize method, of class DRegPageController.
      */
     @Test
     public void testInitialize() {
         System.out.println("initialize");
         URL url = null;
         ResourceBundle rb = null;
-        AHomePageController instance = new AHomePageController();
+        DRegPageController instance = new DRegPageController();
         instance.initialize(url, rb);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
 
     /**
-     * Test of onClickListener method, of class AHomePageController.
+     * Test of onClickListener method, of class DRegPageController.
      */
     @Test
     public void testOnClickListener() {
         System.out.println("onClickListener");
         ActionEvent event = null;
-        AHomePageController instance = new AHomePageController();
+        DRegPageController instance = new DRegPageController();
         instance.onClickListener(event);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getDname_static method, of class DRegPageController.
+     */
+    @Test
+    public void testGetDname_static() {
+        System.out.println("getDname_static");
+        String expResult = "";
+        String result = DRegPageController.getDname_static();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setDname_static method, of class DRegPageController.
+     */
+    @Test
+    public void testSetDname_static() {
+        System.out.println("setDname_static");
+        String aFname_static = "";
+        DRegPageController.setDname_static(aFname_static);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }

@@ -9,6 +9,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -84,7 +85,13 @@ public class RegPage2Controller implements Initializable {
             }
         }
         catch(Exception e){
-            logger.log(Level.SEVERE,"" , e);            
+            logger.log(Level.SEVERE,"" , e);
+            query = "DELETE FROM patientdetails_table WHERE phone='" + controller.getPhone_static() + "';";
+            try {
+                rs = stmt.executeQuery(query);
+            } catch (SQLException ex) {
+                Logger.getLogger(RegPage2Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }
@@ -127,9 +134,9 @@ public class RegPage2Controller implements Initializable {
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(URL, username, password);
         stmt = con.createStatement();
-        query = "INSERT INTO shs_schema.patientlogincred_table VALUES('" + uname.getText() + "', '" + pword.getText() + "', '" + controller.getPhone_static() + "', 'NULL');";
+        query = "INSERT INTO shs_schema.patientlogincred_table VALUES('" + uname.getText() + "', '" + pword.getText() + "', '" + controller.getPhone_static() + "', NULL, NULL, NULL);";
         stmt.executeUpdate(query);
-        System.out.println("Table Updated");
+        System.out.println("patientlogincred_table Updated");
         con.close();
     }
 

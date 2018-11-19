@@ -78,7 +78,6 @@ public class SHSController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SmartHealthcareSystem shs = new SmartHealthcareSystem();
         flag = false;
         regPage = new RegPage();
         php = new PHomePage();
@@ -86,7 +85,7 @@ public class SHSController implements Initializable{
         dregPage = new DRegPage();
         //dhp = new DHomePage();
         try {
-            logger.addHandler(shs.getFHandler());
+            logger.addHandler(SmartHealthcareSystem.getFHandler());
             logger.setLevel(Level.ALL);
         } catch (Exception e) {
             logger.log(Level.SEVERE,"" , e);

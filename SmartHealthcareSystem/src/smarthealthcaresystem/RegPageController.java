@@ -254,7 +254,7 @@ public class RegPageController implements Initializable {
             query = "INSERT INTO shs_schema.patientdetails_table (fname, lname, location, address, phone, cndtion, gender, dob, email) VALUES('" + fname.getText() + "', '" + lname.getText() + "', '" + getLToggleValue() + "', '" + addr.getText() + "', '" + phone.getText() + "', '" + getCToggleValue() + "', '" + getGToggleValue() + "', '" + dob.getValue() + "', '" + email.getText() + "');";
         }
         stmt.executeUpdate(query);
-        System.out.println("Table Updated");
+        System.out.println("patientdetails_table Updated");
         /*query = "SELECT * FROM patientdetails_table;";
         ResultSet rs = stmt.executeQuery(query);
         while(rs.next()){
