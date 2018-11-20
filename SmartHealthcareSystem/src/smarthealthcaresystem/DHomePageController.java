@@ -182,15 +182,13 @@ public class DHomePageController implements Initializable {
         borderpane.setRight(gridpane);
         try {
             //1 for name
-            if(dRegPagec.getDname_static() != null){
+            /*if(dRegPagec.getDname_static() != null){
                 welcome.setText("Welcome " + dRegPagec.getDname_static());
                 welcome.setFont(new Font("Arial",14));
-            }
-            else{
-                dname=lookUpDB(1);
-                welcome.setText("Welcome, " + dname);
-                welcome.setFont(new Font("Arial",14));
-            }
+            }*/
+            dname=lookUpDB(1);
+            welcome.setText("Welcome, " + dname);
+            welcome.setFont(new Font("Arial",14));
             
         } catch (Exception ex) {
             Logger.getLogger(DHomePageController.class.getName()).log(Level.SEVERE, null, ex);

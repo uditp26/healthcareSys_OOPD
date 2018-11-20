@@ -939,7 +939,7 @@ public class PHomePageController implements Initializable {
             
             else if(event.getSource() == shsapp){
                 gridpane.getChildren().clear();
-                String did, dname;
+                String did, dname, pid;
                 alert = new Alert(AlertType.CONFIRMATION, "Appoint Doctor Through SHS?", ButtonType.NO, ButtonType.YES);
                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                 Optional<ButtonType> choice = alert.showAndWait();
@@ -949,12 +949,25 @@ public class PHomePageController implements Initializable {
                         rs = stmt.executeQuery(query);
                         if(rs.next()){
                             did = rs.getString("did");
+                            query = "SELECT phone FROM patientlogincred_table WHERE username = '" + uuid_static + "';";
+                            rs = stmt.executeQuery(query);
+                            rs.next();
+                            String phone = rs.getString("phone");
+                            System.out.println(phone);
+                            query = "SELECT COUNT(*) AS NP FROM patientdetails_table where phone != '" + phone + "';";
+                            rs = stmt.executeQuery(query);
+                            rs.next();
+                            int np = rs.getInt("NP");
+                            query = "SELECT fname, lname, department from doctordetails_table WHERE did = '" + did_reapp + "';";
+                            rs = stmt.executeQuery(query);
+                            rs.next();
+                            pid = getPatientID(rs.getString("department"), np);
                             System.out.println(did);
                             query = "Select fname, lname FROM doctordetails_table WHERE did = '" + did + "';";
                             rs = stmt.executeQuery(query);
                             rs.next();
                             dname = rs.getString("fname") + " " + rs.getString("lname");
-                            query = "UPDATE patientlogincred_table SET did = '" + did + "';";
+                            query = "UPDATE patientlogincred_table SET pid = '" + pid + "', did = '" + did + "';";
                             stmt.executeUpdate(query);
                             System.out.println("patientlogincred_table updated!");
                             alert = new Alert(AlertType.INFORMATION, dname + " has been appointed as your doctor.", ButtonType.OK);
@@ -1069,6 +1082,7 @@ public class PHomePageController implements Initializable {
         rs = stmt.executeQuery(query);
         rs.next();
         String phone = rs.getString("phone");
+        System.out.println(phone);
         query = "SELECT COUNT(*) AS NP FROM patientdetails_table where phone != '" + phone + "';";
         rs = stmt.executeQuery(query);
         rs.next();
@@ -1078,7 +1092,7 @@ public class PHomePageController implements Initializable {
         rs.next();
         String dname = rs.getString("fname") + " " + rs.getString("lname");
         String pid = getPatientID(rs.getString("department"), np);
-        query = "UPDATE patientlogincred_table SET pid = '" + pid + "', did = '" + did_reapp + "';";
+        query = "UPDATE patientlogincred_table SET pid = '" + pid + "', did = '" + did_reapp + "' WHERE phone = '" + phone + "';";
         stmt.executeUpdate(query);
         System.out.println("patientlogincred_table updated");
         alert = new Alert(AlertType.INFORMATION, dname + " has been appointed as your new doctor.", ButtonType.OK);
