@@ -39,32 +39,15 @@ public class AHomePageControllerTest {
     @After
     public void tearDown() {
     }
-
-    /**
-     * Test of initialize method, of class AHomePageController.
-     */
+    
     @Test
-    public void testInitialize() {
-        System.out.println("initialize");
-        URL url = null;
-        ResourceBundle rb = null;
+    public void testcheckUpdateRDB() throws Exception{
+        System.out.println("AHomePageController.checkUpdateRDB()");
         AHomePageController instance = new AHomePageController();
-        instance.initialize(url, rb);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        assertEquals(true, instance.checkUpdateRDB("D02"));
+        assertEquals(false, instance.checkUpdateRDB("MC01"));
     }
 
-    /**
-     * Test of onClickListener method, of class AHomePageController.
-     */
-    @Test
-    public void testOnClickListener() {
-        System.out.println("onClickListener");
-        ActionEvent event = null;
-        AHomePageController instance = new AHomePageController();
-        instance.onClickListener(event);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
+    
     
 }

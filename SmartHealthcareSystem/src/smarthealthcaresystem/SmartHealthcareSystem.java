@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,6 +25,7 @@ public class SmartHealthcareSystem extends Application {
     Scene homepageScene;
     private static Logger logger = Logger.getLogger("smarthealthcaresystem.smarthealthcaresystem");
     private static FileHandler fh;
+    private static SimpleFormatter formatter;
     
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -46,7 +48,9 @@ public class SmartHealthcareSystem extends Application {
      */
     public static void main(String[] args) {
         try {
-            fh = new FileHandler("elogs.log");
+            fh = new FileHandler("elogs.log", true);
+            formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
             launch(args);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "", e);

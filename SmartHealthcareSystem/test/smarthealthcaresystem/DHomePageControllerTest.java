@@ -39,18 +39,12 @@ public class DHomePageControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of initialize method, of class DHomePageController.
-     */
     @Test
-    public void testInitialize() {
-        System.out.println("initialize");
-        URL url = null;
-        ResourceBundle rb = null;
+    public void testcheckDID() throws Exception{
+        System.out.println("DHomePageController.checkDID()");
         DHomePageController instance = new DHomePageController();
-        instance.initialize(url, rb);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        assertEquals(true, instance.checkDID("D01"));
+        assertEquals(false, instance.checkDID("MP01"));
     }
     
 }

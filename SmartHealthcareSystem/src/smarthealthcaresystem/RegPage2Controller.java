@@ -45,6 +45,7 @@ public class RegPage2Controller implements Initializable {
     private String query;
     
     private static String fname_static;
+    private static String uuid_static;
     
     @FXML
     Label fname;
@@ -108,6 +109,7 @@ public class RegPage2Controller implements Initializable {
             System.out.println("Password does not match!");
             return false;
         }
+        setUuid_static(uname.getText());
         return true;
     }
     
@@ -146,5 +148,28 @@ public class RegPage2Controller implements Initializable {
     
     public static void setFname_static(String aFname_static) {
         fname_static = aFname_static;
+    }
+    
+    public boolean checkURecords(String fname, String lname) throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT * FROM patientdetails_table WHERE fname = '" + fname + "' AND lname = '" + lname + "';";
+        rs = stmt.executeQuery(query);
+        return rs.next();
+    }
+
+    /**
+     * @return the uuid_static
+     */
+    public static String getUuid_static() {
+        return uuid_static;
+    }
+
+    /**
+     * @param aUuid_static the uuid_static to set
+     */
+    public static void setUuid_static(String aUuid_static) {
+        uuid_static = aUuid_static;
     }
 }

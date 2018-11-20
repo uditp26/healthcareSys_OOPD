@@ -16,15 +16,22 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -56,7 +63,9 @@ public class AHomePageController implements Initializable {
     private int rcount;
     
     SmartHealthcareSystem shs;
+    AHomePage ahp;
     Stage window;
+    Scene scene;
     Label sno, pname, gender, disease, dname, h1, h2, h3, h4, h5, doc[];
     TextField tfdoc[];
     TextArea addr;
@@ -95,6 +104,9 @@ public class AHomePageController implements Initializable {
     @FXML
     GridPane gridPane;
     
+    @FXML
+    ScrollBar sbar;
+    
     
     /**
      * Initializes the controller class.
@@ -103,9 +115,19 @@ public class AHomePageController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         shs = new SmartHealthcareSystem();
+        ahp = new AHomePage();
         flag = true;
         logger.addHandler(shs.getFHandler());
         logger.setLevel(Level.ALL);
+        scene = ahp.getAdminScene();
+        sbar.valueProperty().addListener(new ChangeListener<Number>(){
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //System.out.println(oldValue + " " + newValue);
+                borderPane.getCenter().setLayoutY(-newValue.doubleValue());
+            }
+            
+        });
     }    
     
     public void onClickListener(ActionEvent event){
@@ -474,6 +496,15 @@ public class AHomePageController implements Initializable {
        stmt.executeUpdate(query);
        System.out.println("patientlogincred_table Updated");
        con.close();
+   }
+   
+   public boolean checkUpdateRDB(String did) throws Exception{
+       Class.forName("com.mysql.jdbc.Driver");
+       con = DriverManager.getConnection(URL, username, password);
+       stmt = con.createStatement();
+       query = "SELECT * FROM patientlogincred_table WHERE did = '" + did + "';";
+       rs = stmt.executeQuery(query);
+       return rs.next();
    }
     
     private int listDoctors(int row, Label dclicked, String did) throws SQLException{

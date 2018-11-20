@@ -38,6 +38,7 @@ public class DRegPageController implements Initializable {
     SHSController controller3;
     Stage window;
     PHomePage pHomePage;
+    DHomePage dHomePage;
     private ResultSet rs;
     private Connection con;
     private Statement stmt;
@@ -63,7 +64,7 @@ public class DRegPageController implements Initializable {
         controller = new RegPageController();
         controller2 = new DHomePageController();
         controller3 = new SHSController();
-        //dHomePage = new DHomePage();      // <-- change here
+        dHomePage = new DHomePage();
         dname.setText("Welcome " + controller3.getDname_static());
         logger.addHandler(shs.getFHandler());
         logger.setLevel(Level.ALL);
@@ -76,8 +77,8 @@ public class DRegPageController implements Initializable {
                 if(validateInput()){
                     updateDB();
                     setDname_static(controller3.getDname_static());
-                    //controller2.setDname_static(dname_static);        // <-- change here
-                    //dHomePage.startLog(window);       // <-- change here
+                    controller2.setDname_static(dname_static);
+                    dHomePage.startReg(window);
                 }
             }
         }
@@ -113,6 +114,18 @@ public class DRegPageController implements Initializable {
     
     public static void setDname_static(String aFname_static) {
         dname_static = aFname_static;
-    }    
+    }
+
+    public String checkDBStatus(String did) throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT fname, lname FROM doctordetails_table WHERE did = '" + did + "';";
+        rs = stmt.executeQuery(query);
+        if(rs.next()){
+            return rs.getString("fname") + " " + rs.getString("lname");
+        }
+        return null;
+    }
     
 }

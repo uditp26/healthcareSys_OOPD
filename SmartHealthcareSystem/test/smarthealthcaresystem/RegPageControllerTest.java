@@ -40,83 +40,13 @@ public class RegPageControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of initialize method, of class RegPageController.
-     */
     @Test
-    public void testInitialize() {
-        System.out.println("initialize");
-        URL url = null;
-        ResourceBundle rb = null;
+    public void testvalidateIP() throws Exception {
+        System.out.println("RegPageController.validateIP()");
         RegPageController instance = new RegPageController();
-        instance.initialize(url, rb);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        assertEquals(true, instance.validateIP("9643121619"));
+        assertEquals(false, instance.validateIP("8574541256"));
+        assertEquals(false, instance.validateIP("8574741226"));
     }
-
-    /**
-     * Test of onClickListener method, of class RegPageController.
-     */
-    @Test
-    public void testOnClickListener() {
-        System.out.println("onClickListener");
-        ActionEvent event = null;
-        RegPageController instance = new RegPageController();
-        instance.onClickListener(event);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setfname_static method, of class RegPageController.
-     */
-    @Test
-    public void testSetfname_static() {
-        System.out.println("setfname_static");
-        String fname = "";
-        RegPageController instance = new RegPageController();
-        instance.setfname_static(fname);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getfname_static method, of class RegPageController.
-     */
-    @Test
-    public void testGetfname_static() {
-        System.out.println("getfname_static");
-        RegPageController instance = new RegPageController();
-        String expResult = "";
-        String result = instance.getfname_static();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getPhone_static method, of class RegPageController.
-     */
-    @Test
-    public void testGetPhone_static() {
-        System.out.println("getPhone_static");
-        String expResult = "";
-        String result = RegPageController.getPhone_static();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setPhone_static method, of class RegPageController.
-     */
-    @Test
-    public void testSetPhone_static() {
-        System.out.println("setPhone_static");
-        String aPhone_static = "";
-        RegPageController.setPhone_static(aPhone_static);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-    
+     
 }

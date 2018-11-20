@@ -16,12 +16,15 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 /**
@@ -40,6 +43,7 @@ public class RegPageController implements Initializable {
     private Connection con;
     private Statement stmt;
     private String guardian, emphone;
+    private Alert alert;
     
     private static String fname_static;
     private static String phone_static;
@@ -196,7 +200,9 @@ public class RegPageController implements Initializable {
         }
         
         if(gender.getSelectedToggle() == null){
-            // show alert dialog box
+            alert = new Alert(Alert.AlertType.INFORMATION, "Gender not selected!", ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.show();
             flag = false;
         }
         if(dob.getValue() == null){
@@ -222,12 +228,16 @@ public class RegPageController implements Initializable {
         }
         
         if(location.getSelectedToggle() == null){
-            // show alert dialog box
+            alert = new Alert(Alert.AlertType.INFORMATION, "Location not selected!", ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.show();
             flag = false;
         }
         
         if(condition.getSelectedToggle() == null){
-            // show alert dialog box
+            alert = new Alert(Alert.AlertType.INFORMATION, "Condition not selected!", ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.show();
             flag = false;
         }
         if(!accomp.getText().matches("[a-zA-Z]*")){
@@ -301,6 +311,18 @@ public class RegPageController implements Initializable {
         else{
             return "T";
         }
+    }
+    
+    public boolean validateIP(String phone) throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT * FROM patientdetails_table WHERE phone = '" + phone + "';";
+        rs = stmt.executeQuery(query);
+        if(rs.next()){
+            return true; 
+        }
+        return false;
     }
     
 }

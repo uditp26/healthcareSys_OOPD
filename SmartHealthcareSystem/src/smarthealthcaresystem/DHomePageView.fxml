@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smarthealthcaresystem.DHomePageController">
-    
-</AnchorPane>
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smarthealthcaresystem.DHomePageController">
+         <left>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="edit_profile" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="118.0" text="Edit my profile" />
+                  <Region VBox.vgrow="ALWAYS" />
+                  <Button fx:id="view_profile" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="117.0" text="View my profile" />
+                  <Region VBox.vgrow="ALWAYS" />
+                  <Button fx:id="display_patient" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="113.0" text="Display Patient" />
+                  <Region VBox.vgrow="ALWAYS" />
+                  <Button fx:id="refer_patient" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="117.0" text="Refer Patient" />
+                  <Region VBox.vgrow="ALWAYS" />
+            <Button fx:id="discharge_patient" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="115.0" text="Discharge Patient" />
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </BorderPane.margin>
+            </VBox>
+         </left>
+         <top>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+            <Label fx:id="welcome" onMouseClicked="#onClickListener" prefHeight="17.0" prefWidth="180.0">
+               <HBox.margin>
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+               </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="name">
+               <HBox.margin>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="logout" mnemonicParsing="false" onAction="#onClickListener" text="Logout" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>

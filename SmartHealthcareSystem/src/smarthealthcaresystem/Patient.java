@@ -1,81 +1,60 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package smarthealthcaresystem;
 import java.util.*;
-/**
- *
- * @author SONY
- */
+
 public class Patient {
     private String pid;
     private String fname;
     private String lname;
-    private boolean location;
+    private String location;
     private String address;
-    private long phone;
-    private boolean condition;
-    private char gender;
+    private String phone;
+    private String condition;
+    private String gender;
     private Date dob;
     private String guardian;
     private long emergencyphone;
     private String email;
-
-    /**
-     * @return the pid
-     */
+    public Patient(String pid,String fname,String lname,String location,String phone,String condition,String gender)
+    {
+        this.pid=pid;
+        this.fname=fname;
+        this.lname=lname;
+        this.location=location;
+        this.phone=phone;
+        this.condition=condition;
+        this.gender=gender;
+        
+    }
     public String getPid() {
         return pid;
     }
 
-    /**
-     * @param pid the pid to set
-     */
     public void setPid(String pid) {
         this.pid = pid;
     }
 
-    /**
-     * @return the fname
-     */
+  
     public String getFname() {
         return fname;
     }
 
-    /**
-     * @param fname the fname to set
-     */
+   
     public void setFname(String fname) {
         this.fname = fname;
     }
 
-    /**
-     * @return the lname
-     */
     public String getLname() {
         return lname;
     }
-
-    /**
-     * @param lname the lname to set
-     */
     public void setLname(String lname) {
         this.lname = lname;
     }
-
-    /**
-     * @return the location
-     */
-    public boolean isLocation() {
+    public String isLocation() {
         return location;
     }
 
-    /**
-     * @param location the location to set
-     */
-    public void setLocation(boolean location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -96,42 +75,42 @@ public class Patient {
     /**
      * @return the phone
      */
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
     /**
      * @param phone the phone to set
      */
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
     /**
      * @return the condition
      */
-    public boolean isCondition() {
+    public String isCondition() {
         return condition;
     }
 
     /**
      * @param condition the condition to set
      */
-    public void setCondition(boolean condition) {
+    public void setCondition(String condition) {
         this.condition = condition;
     }
 
     /**
      * @return the gender
      */
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
     /**
      * @param gender the gender to set
      */
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 

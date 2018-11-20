@@ -39,57 +39,14 @@ public class RegPage2ControllerTest {
     @After
     public void tearDown() {
     }
-
-    /**
-     * Test of initialize method, of class RegPage2Controller.
-     */
+    
     @Test
-    public void testInitialize() {
-        System.out.println("initialize");
-        URL url = null;
-        ResourceBundle rb = null;
+    public void testcheckURecords() throws Exception {
+        System.out.println("RegPageController.checkURecords()");
         RegPage2Controller instance = new RegPage2Controller();
-        instance.initialize(url, rb);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of onClickListener method, of class RegPage2Controller.
-     */
-    @Test
-    public void testOnClickListener() {
-        System.out.println("onClickListener");
-        ActionEvent event = null;
-        RegPage2Controller instance = new RegPage2Controller();
-        instance.onClickListener(event);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFname_static method, of class RegPage2Controller.
-     */
-    @Test
-    public void testGetFname_static() {
-        System.out.println("getFname_static");
-        String expResult = "";
-        String result = RegPage2Controller.getFname_static();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setFname_static method, of class RegPage2Controller.
-     */
-    @Test
-    public void testSetFname_static() {
-        System.out.println("setFname_static");
-        String aFname_static = "";
-        RegPage2Controller.setFname_static(aFname_static);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        assertEquals(true, instance.checkURecords("Udit", "Pant"));
+        assertEquals(false, instance.checkURecords("Mark", "Colloway"));
+        //assertEquals(false, instance.checkURecords("8574741226"));
     }
     
 }

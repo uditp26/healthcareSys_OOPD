@@ -40,56 +40,10 @@ public class DRegPageControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of initialize method, of class DRegPageController.
-     */
     @Test
-    public void testInitialize() {
-        System.out.println("initialize");
-        URL url = null;
-        ResourceBundle rb = null;
+    public void testcheckDBStatus() throws Exception{
+        System.out.println("DRegPageController.checkDBStatus()");
         DRegPageController instance = new DRegPageController();
-        instance.initialize(url, rb);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        assertEquals("Yatin Kukreja", instance.checkDBStatus("D01"));
     }
-
-    /**
-     * Test of onClickListener method, of class DRegPageController.
-     */
-    @Test
-    public void testOnClickListener() {
-        System.out.println("onClickListener");
-        ActionEvent event = null;
-        DRegPageController instance = new DRegPageController();
-        instance.onClickListener(event);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getDname_static method, of class DRegPageController.
-     */
-    @Test
-    public void testGetDname_static() {
-        System.out.println("getDname_static");
-        String expResult = "";
-        String result = DRegPageController.getDname_static();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setDname_static method, of class DRegPageController.
-     */
-    @Test
-    public void testSetDname_static() {
-        System.out.println("setDname_static");
-        String aFname_static = "";
-        DRegPageController.setDname_static(aFname_static);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-    
 }

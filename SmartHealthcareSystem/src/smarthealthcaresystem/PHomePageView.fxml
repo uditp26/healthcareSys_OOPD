@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smarthealthcaresystem.PHomePageController">
+<BorderPane fx:id="bPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smarthealthcaresystem.PHomePageController">
          <left>
             <VBox BorderPane.alignment="CENTER">
                <children>
@@ -22,11 +22,8 @@
                   <Region VBox.vgrow="ALWAYS" />
                   <Button fx:id="view_profile" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="117.0" text="View profile" />
                   <Region VBox.vgrow="ALWAYS" />
-                  <Button fx:id="view_doctor" mnemonicParsing="false" onAction="#onClickListener" text="View Doctor Profile" />
+                  <Button fx:id="shsapp" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="117.0" text="SHS_Appoint" />
                   <Region VBox.vgrow="ALWAYS" />
-                  <Button fx:id="choose_doctor" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="117.0" text="Choose Doctor" />
-                  <Region VBox.vgrow="ALWAYS" />
-                  <Button fx:id="request_appointment" mnemonicParsing="false" onAction="#onClickListener" prefHeight="25.0" prefWidth="118.0" text="Fix Appointment" />
                </children>
                <BorderPane.margin>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -85,6 +82,7 @@
                   <RowConstraints maxHeight="285.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="285.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="285.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="285.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="285.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                   </GridPane>

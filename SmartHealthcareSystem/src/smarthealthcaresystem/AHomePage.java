@@ -16,14 +16,35 @@ import javafx.stage.Stage;
  * @author protagonist26
  */
 public class AHomePage {
-    Parent adminPage;
-    Scene adminScene;
+    private Parent adminPage;
+    private Scene adminScene;
     
     public void startAHP(Stage window) throws IOException {
         adminPage = FXMLLoader.load(getClass().getResource("AHomePageView.fxml"));
-        adminScene = new Scene(adminPage, window.getWidth(), window.getHeight());
-        window.setScene(adminScene);
+        setAdminScene(new Scene(getAdminPage(), window.getWidth(), window.getHeight()));
+        window.setScene(getAdminScene());
         window.show();
+    }
+
+    /**
+     * @return the adminScene
+     */
+    public Scene getAdminScene() {
+        return adminScene;
+    }
+
+    /**
+     * @param adminScene the adminScene to set
+     */
+    public void setAdminScene(Scene adminScene) {
+        this.adminScene = adminScene;
+    }
+
+    /**
+     * @return the adminPage
+     */
+    public Parent getAdminPage() {
+        return adminPage;
     }
     
 }

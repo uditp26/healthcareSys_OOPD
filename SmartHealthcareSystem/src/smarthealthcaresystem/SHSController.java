@@ -22,6 +22,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import java.util.logging.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Region;
 
 /**
  *
@@ -38,7 +42,8 @@ public class SHSController implements Initializable{
     private ResultSet rs;
     private Connection con;
     private Statement stmt;
-    private Boolean flag;
+    private Boolean flag, flag2;
+    private Alert alert;
     
     private static String uname_static;
     private static String dname_static;
@@ -49,7 +54,8 @@ public class SHSController implements Initializable{
     PHomePage php;
     AHomePage ahp;
     DRegPage dregPage;
-    //DHomePage dhp;
+    DHomePage dhp;
+    DHomePageController dhpcontroller;
     
     
     @FXML
@@ -79,11 +85,13 @@ public class SHSController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         flag = false;
+        flag2 = false;
         regPage = new RegPage();
         php = new PHomePage();
         ahp = new AHomePage();
         dregPage = new DRegPage();
-        //dhp = new DHomePage();
+        dhp = new DHomePage();
+        dhpcontroller = new DHomePageController();
         try {
             logger.addHandler(SmartHealthcareSystem.getFHandler());
             logger.setLevel(Level.ALL);
@@ -116,13 +124,20 @@ public class SHSController implements Initializable{
                         if(lookUpDB(2)){
                             if(flag){
                                 setDid_static(uid.getText());
+                                dhpcontroller.setDname_static(uid.getText());
                                 dregPage.startReg(window);
                             }
                             else{
                                 System.out.println("Doctor credentials exists! Login successful.");
+                                dhpcontroller.setDname_static(uid.getText());
+                                dhp.startReg(window);
                             }
                         }
                         else{
+                            if(flag2 == true){
+                                dhpcontroller.setDname_static(uid.getText());
+                                dhp.startReg(window);
+                            }
                             System.out.println("Doctor login failed!");
                         }
                         //
@@ -137,6 +152,9 @@ public class SHSController implements Initializable{
                         }
                         break;
                     default:
+                        alert = new Alert(AlertType.INFORMATION, "Unknown User!", ButtonType.OK);
+                        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                        alert.show();
                 }
             }
         }
@@ -161,7 +179,7 @@ public class SHSController implements Initializable{
         }
     }
     
-    private boolean lookUpDB(int i) throws Exception{
+    public boolean lookUpDB(int i) throws Exception{
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(URL, username, password);
         stmt = con.createStatement();
@@ -181,6 +199,7 @@ public class SHSController implements Initializable{
                     flag = true;
                     return true;
                 }
+                flag2 = true;
             }
         }
         return false;
@@ -220,6 +239,30 @@ public class SHSController implements Initializable{
      */
     public static void setDname_static(String aDname_static) {
         dname_static = aDname_static;
+    }
+    
+    public String fetchName(String phone) throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT fname, lname FROM patientdetails_table WHERE phone = '" + phone + "';";
+        rs = stmt.executeQuery(query);
+        if(rs.next()){
+            return rs.getString("fname") + " " + rs.getString("lname"); 
+        }
+        return null;
+    }
+    
+    public int fetchPCount() throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(URL, username, password);
+        stmt = con.createStatement();
+        query = "SELECT COUNT(*) AS pc FROM patientdetails_table;";
+        rs = stmt.executeQuery(query);
+        if(rs.next()){
+            return rs.getInt("pc"); 
+        }
+        return -1;
     }
     
 }
