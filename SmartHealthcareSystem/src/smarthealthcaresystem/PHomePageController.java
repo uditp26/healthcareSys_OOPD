@@ -70,6 +70,7 @@ public class PHomePageController implements Initializable {
     private Button backButton;
     private Button request_appointment;
     private Alert alert;
+    private  Boolean flag;
 
     
     private static String fname_static;
@@ -108,6 +109,13 @@ public class PHomePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(URL, username, password);
+            stmt = con.createStatement();
+        } catch (Exception ex) {
+            Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         shs = new SmartHealthcareSystem();
         regPage2Controller = new RegPage2Controller();
         controller = new SHSController();
@@ -119,9 +127,11 @@ public class PHomePageController implements Initializable {
         //view_doctor.setVisible(false);
         if(controller.getUname_static() == null){
             uuid_static = regPage2Controller.getUuid_static();
+            flag = true;
         }
         else{
             uuid_static = controller.getUname_static();
+            flag = false;
         }
         if(fname_static == null){
             try {
@@ -141,10 +151,6 @@ public class PHomePageController implements Initializable {
                 //view_doctor.setVisible(false);
                 name.setText("EDIT PROFILE");
                 gridpane.getChildren().clear();
-                
-                Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection(URL, username, password);
-                stmt = con.createStatement();
                 String user_name =  controller.getUname_static();
                 query = "SELECT patientdetails_table.fname, patientdetails_table.lname, patientdetails_table.address, patientdetails_table.email, patientlogincred_table.password FROM patientdetails_table,patientlogincred_table WHERE patientdetails_table.phone=patientlogincred_table.phone AND patientlogincred_table.username='" + uuid_static + "';";
                 rs = stmt.executeQuery(query);
@@ -221,9 +227,6 @@ public class PHomePageController implements Initializable {
                         }
                         if(flag){
                             try {
-                                Class.forName("com.mysql.jdbc.Driver");
-                                con = DriverManager.getConnection(URL, username, password);
-                                stmt = con.createStatement();
                                 query = "SELECT phone FROM patientlogincred_table WHERE username = '" + uuid_static + "';";
                                 rs = stmt.executeQuery(query);
                                 rs.next();
@@ -234,7 +237,7 @@ public class PHomePageController implements Initializable {
                                 stmt.executeUpdate(query);
                                 System.out.println("patientlogincred_table updated!");
                             } 
-                            catch (ClassNotFoundException | SQLException ex) {
+                            catch (Exception ex) {
                                 Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
@@ -296,9 +299,6 @@ public class PHomePageController implements Initializable {
                                     try {
                                         String id = id1.getText();
                                         //gridpane.getChildren().clear();
-                                        Class.forName("com.mysql.jdbc.Driver");
-                                        con = DriverManager.getConnection(URL, username, password);
-                                        stmt = con.createStatement();
                                         query = "SELECT fname,lname,did FROM doctordetails_table WHERE did='" + id + "'";
                                         rs = stmt.executeQuery(query);
                                         try {
@@ -332,9 +332,6 @@ public class PHomePageController implements Initializable {
                                                                     try {
                                                                         did_reapp = dids.get(i).getText();
                                                                         gridpane.getChildren().clear();
-                                                                        Class.forName("com.mysql.jdbc.Driver");
-                                                                        con = DriverManager.getConnection(URL, username, password);
-                                                                        stmt = con.createStatement();
                                                                         query = "SELECT fname,lname,address,phone,email,department,dutystart,dutyend FROM doctordetails_table WHERE did='" + dids.get(i).getText() + "'";
                                                                         rs = stmt.executeQuery(query);
                                                                         while(rs.next()){
@@ -416,7 +413,7 @@ public class PHomePageController implements Initializable {
 
                                                                         });
                                                                     }
-                                                                    catch (ClassNotFoundException | SQLException ex) {
+                                                                    catch (Exception ex) {
                                                                         Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                                                     }
                                                                 }
@@ -442,7 +439,7 @@ public class PHomePageController implements Initializable {
                                         }
                                        
                                     } 
-                                    catch (ClassNotFoundException | SQLException ex) {
+                                    catch (Exception ex) {
                                         Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
@@ -459,9 +456,6 @@ public class PHomePageController implements Initializable {
                                 @Override
                                 public void handle(ActionEvent event) {
                                     try {
-                                        Class.forName("com.mysql.jdbc.Driver");
-                                        con = DriverManager.getConnection(URL, username, password);
-                                        stmt = con.createStatement();
                                         String name1 = id2.getText();
                                         String[] search_name = name1.split(" ");
                                         if (search_name.length == 1){
@@ -501,9 +495,6 @@ public class PHomePageController implements Initializable {
                                                                 try {
                                                                     did_reapp = dids.get(i).getText();
                                                                     gridpane.getChildren().clear();
-                                                                    Class.forName("com.mysql.jdbc.Driver");
-                                                                    con = DriverManager.getConnection(URL, username, password);
-                                                                    stmt = con.createStatement();
                                                                     query = "SELECT fname,lname,address,phone,email,department,dutystart,dutyend FROM doctordetails_table WHERE did='" + dids.get(i).getText() + "'";
                                                                     rs = stmt.executeQuery(query);
                                                                     while(rs.next()){
@@ -584,7 +575,7 @@ public class PHomePageController implements Initializable {
                                                                         
                                                                     });
                                                                 } 
-                                                                catch (ClassNotFoundException | SQLException ex) {
+                                                                catch (Exception ex) {
                                                                     Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                                                 }
                                                             }
@@ -606,7 +597,7 @@ public class PHomePageController implements Initializable {
                                             }
                                         }
                                        
-                                    } catch (ClassNotFoundException | SQLException ex) {
+                                    } catch (Exception ex) {
                                         Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
@@ -625,9 +616,9 @@ public class PHomePageController implements Initializable {
                                     try {
                                         String address = id3.getText();
                                         gridpane.getChildren().clear();
-                                        Class.forName("com.mysql.jdbc.Driver");
-                                        con = DriverManager.getConnection(URL, username, password);
-                                        stmt = con.createStatement();
+                                        //Class.forName("com.mysql.jdbc.Driver");
+                                        //con = DriverManager.getConnection(URL, username, password);
+                                        //stmt = con.createStatement();
                                         query = "SELECT did,fname,lname FROM doctordetails_table WHERE address='" + address + "'";
                                         rs = stmt.executeQuery(query);
                                         if(rs.wasNull()){
@@ -660,9 +651,6 @@ public class PHomePageController implements Initializable {
                                                                 try {
                                                                     did_reapp = dids.get(i).getText();
                                                                     gridpane.getChildren().clear();
-                                                                    Class.forName("com.mysql.jdbc.Driver");
-                                                                    con = DriverManager.getConnection(URL, username, password);
-                                                                    stmt = con.createStatement();
                                                                     query = "SELECT fname,lname,address,phone,email,department,dutystart,dutyend FROM doctordetails_table WHERE did='" + dids.get(i).getText() + "'";
                                                                     rs = stmt.executeQuery(query);
                                                                     while(rs.next()){
@@ -744,7 +732,7 @@ public class PHomePageController implements Initializable {
                                                                         
                                                                     });
                                                                 } 
-                                                                catch (ClassNotFoundException | SQLException ex) {
+                                                                catch (Exception ex) {
                                                                     Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                                                 }
                                                             }
@@ -766,7 +754,7 @@ public class PHomePageController implements Initializable {
                                             } 
                                         }
                                     } 
-                                    catch (ClassNotFoundException | SQLException ex) {
+                                    catch (Exception ex) {
                                         Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
@@ -785,9 +773,9 @@ public class PHomePageController implements Initializable {
                                     try {
                                         String cat = id4.getText();
                                         gridpane.getChildren().clear();
-                                        Class.forName("com.mysql.jdbc.Driver");
-                                        con = DriverManager.getConnection(URL, username, password);
-                                        stmt = con.createStatement();
+                                        //Class.forName("com.mysql.jdbc.Driver");
+                                        //con = DriverManager.getConnection(URL, username, password);
+                                        //stmt = con.createStatement();
                                         query = "SELECT did,fname,lname FROM doctordetails_table WHERE department='" + cat + "'";
                                         rs = stmt.executeQuery(query);
                                         if(rs.wasNull()){
@@ -820,9 +808,6 @@ public class PHomePageController implements Initializable {
                                                                 try {
                                                                     did_reapp = dids.get(i).getText();
                                                                     gridpane.getChildren().clear();
-                                                                    Class.forName("com.mysql.jdbc.Driver");
-                                                                    con = DriverManager.getConnection(URL, username, password);
-                                                                    stmt = con.createStatement();
                                                                     query = "SELECT fname,lname,address,phone,email,department,dutystart,dutyend FROM doctordetails_table WHERE did='" + dids.get(i).getText() + "'";
                                                                     rs = stmt.executeQuery(query);
                                                                     while(rs.next()){
@@ -904,7 +889,7 @@ public class PHomePageController implements Initializable {
                                                                         
                                                                     });
                                                                 } 
-                                                                catch (ClassNotFoundException | SQLException ex) {
+                                                                catch (Exception ex) {
                                                                     Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                                                 }
                                                             }
@@ -926,7 +911,7 @@ public class PHomePageController implements Initializable {
                                             }
                                         }
                                     } 
-                                    catch (ClassNotFoundException | SQLException ex) {
+                                    catch (Exception ex) {
                                         Logger.getLogger(PHomePageController.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
@@ -945,7 +930,7 @@ public class PHomePageController implements Initializable {
                 Optional<ButtonType> choice = alert.showAndWait();
                 if(choice.get() == ButtonType.YES){
                     if(!checkPAppointment()){
-                        query = "SELECT did, COUNT(*) AS mcd from patientlogincred_table WHERE username != '" + uuid_static + "' GROUP BY did ORDER BY mcd;";
+                        query = "SELECT did, COUNT(*) AS mcd from patientlogincred_table WHERE username != '" + uuid_static + "' AND NOT did IS NULL GROUP BY did ORDER BY mcd;";
                         rs = stmt.executeQuery(query);
                         if(rs.next()){
                             did = rs.getString("did");
@@ -953,21 +938,20 @@ public class PHomePageController implements Initializable {
                             rs = stmt.executeQuery(query);
                             rs.next();
                             String phone = rs.getString("phone");
-                            System.out.println(phone);
                             query = "SELECT COUNT(*) AS NP FROM patientdetails_table where phone != '" + phone + "';";
                             rs = stmt.executeQuery(query);
                             rs.next();
                             int np = rs.getInt("NP");
-                            query = "SELECT fname, lname, department from doctordetails_table WHERE did = '" + did_reapp + "';";
+                            System.out.println(did);
+                            query = "SELECT fname, lname, department from doctordetails_table WHERE did = '" + did + "';";
                             rs = stmt.executeQuery(query);
                             rs.next();
                             pid = getPatientID(rs.getString("department"), np);
-                            System.out.println(did);
                             query = "Select fname, lname FROM doctordetails_table WHERE did = '" + did + "';";
                             rs = stmt.executeQuery(query);
                             rs.next();
                             dname = rs.getString("fname") + " " + rs.getString("lname");
-                            query = "UPDATE patientlogincred_table SET pid = '" + pid + "', did = '" + did + "';";
+                            query = "UPDATE patientlogincred_table SET pid = '" + pid + "', did = '" + did + "' WHERE phone = '" + phone + "';";
                             stmt.executeUpdate(query);
                             System.out.println("patientlogincred_table updated!");
                             alert = new Alert(AlertType.INFORMATION, dname + " has been appointed as your doctor.", ButtonType.OK);
@@ -989,9 +973,6 @@ public class PHomePageController implements Initializable {
             }
             else if(event.getSource() == view_profile){
                 //view_doctor.setVisible(false);
-                Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection(URL, username, password);
-                stmt = con.createStatement();
                 query = "SELECT phone FROM patientlogincred_table WHERE username = '" + uuid_static + "'";
                 rs = stmt.executeQuery(query);
                 long ph_one = 0;
@@ -1066,15 +1047,17 @@ public class PHomePageController implements Initializable {
     }
     
     private boolean checkPAppointment() throws SQLException{
-        System.out.println(controller.getUname_static());
-        query = "SELECT did from patientlogincred_table WHERE username = '" + uuid_static + "';";
+        query = "SELECT did from patientlogincred_table WHERE username = '" + uuid_static + "' AND NOT did IS NULL;";
         rs = stmt.executeQuery(query);
-        if(rs.next()){
-            if(rs.getString("did") ==  null){
-                return false;
-            }
+        if(!flag)
+            rs.next();
+        System.out.println(rs.getRow());
+        if(rs.getRow() == 0){
+            return false;
         }
-        return true;
+        else{
+           return true;
+        }  
     }
     
     private void setAppointment() throws Exception{
@@ -1141,9 +1124,9 @@ public class PHomePageController implements Initializable {
     }
     
     public String getNamefromDB(String uname) throws Exception{
-        Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection(URL, username, password);
-        stmt = con.createStatement();
+        //Class.forName("com.mysql.jdbc.Driver");
+        //con = DriverManager.getConnection(URL, username, password);
+        //stmt = con.createStatement();
         query = "SELECT shs_schema.patientdetails_table.fname FROM shs_schema.patientdetails_table, shs_schema.patientlogincred_table WHERE shs_schema.patientlogincred_table.username='" + uname + "' AND shs_schema.patientlogincred_table.phone=shs_schema.patientdetails_table.phone;";
         rs = stmt.executeQuery(query);
         rs.next();
